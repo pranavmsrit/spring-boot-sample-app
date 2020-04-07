@@ -1,0 +1,21 @@
+node {
+    dir('spring-jenkins-pipeline') {
+        stage("Compilation and Analysis") {
+            {
+                sh "./mvnw clean install -DskipTests"
+            }
+            }
+        } 
+        
+        stage("Runing unit tests") {
+         try {
+               h "./mvnw test -Punit"
+              } catch(err) {
+                   step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*UnitTest.xml'])
+                        throw err
+                    }
+                   step([$class: 'JUnitResultArchiver', testResults: **/target/surefire-reports/TEST-*UnitTest.xml'])
+              }
+             
+        }
+    }
